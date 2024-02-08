@@ -25,4 +25,3 @@ class SetSanctumGuard
         return $next($request);
     }
 }
-            

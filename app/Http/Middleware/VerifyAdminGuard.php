@@ -17,10 +17,12 @@ class VerifyAdminGuard
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if(!auth()->user() instanceof Admin)
-        return response()->json([
-    'status' => false,
-    'message' => 'Não é uma instancia de ADM']);
+        if(!auth()->user() instanceof Admin){
+            return response()->json([
+                'status' => false,
+                'message' => 'Não é uma instancia de ADM'
+            ]);
+        }
         return $next($request);
     }
 }

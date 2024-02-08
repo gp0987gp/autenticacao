@@ -14,63 +14,54 @@ class AdminController extends Controller
         try {
             $data = $request->all();
 
-            $data['password'] = Hash::make($request->password);
-
-
+            $data['password'] =Hash::make($request->password);
+        
             $response = Admin::create($data)->createToken($request->server('HTTP_USER_AGENT'))->plainTextToken;
 
             return response()->json([
-                'status' => 'success',
-                'message' => "Admin cadastrado com sucesso",
-                'token' => $response
-            ], 200);
-        } catch (\Throwable $th) {
+                'status'=>'success',
+                'message'=>"Admin cadastrado com sucesso",
+                'token'=> $response
+            ],200);
+
+        }catch(\Throwable $th){
             return response()->json([
-                'status' => false,
-                'message' => $th->getMessage()
-            ], 500);
-        };
+                'status'=>false,
+                'message'=> $th->getMessage()
+            ],500);
+        }
     }
 
-    public function login(Request $request)
-    {
-        try {
+    public function login(Request $request){
+        try{
             if(Auth::guard('admins')->attempt([
-                'email' => $request->email,
-                'password' => $request->password
+                'email'=> $request->email,
+                'password'=> $request->password
             ])){
                 $user = Auth::guard('admins')->user();
 
-
-                $token = $user->createToken(
-                    $request->server('HTTP_USER_AGENT',
-                    ['admins']))->plainTextToken;
+                $token = $user->createToken($request->server('HTTP_USER_AGENT', ['admins']))->plainTextToken;
 
                     return response()->json([
-                        'status' => true,
-                        'message' => 'login efetuado com sucesso',
+                        'status'=> true,
+                        'message'=> 'login efetuado com sucesso',
                         'token' => $token
                     ]);
-                
-            } else {
+            }else {
                 return response()->json([
                     'status' => false,
                     'message' => 'credenciais incorretas'
                 ]);
             }
-        } catch (\Throwable $th) {
+        }catch(\Throwable $th){
             return response()->json([
                 'status' => false,
                 'message' => $th->getMessage()
-            ], 500);
+            ],500);
         }
     }
 
-    public function verificarUsuarioLogado(){
-        return auth::user()->name;                
-
+    public function verificaUsuarioLogado(){
+        return Auth::user()->name;
     }
-
-    
-    
 }
